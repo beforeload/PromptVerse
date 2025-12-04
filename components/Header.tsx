@@ -35,14 +35,9 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
             </div>
           </div>
 
-          {/* Right Actions */}
+          {/* Right Actions - Empty now but keeping structure for future additions */}
           <div className="flex items-center space-x-4">
-             <button className="text-sm font-medium text-gray-500 hover:text-gray-900 hidden sm:block">
-               Submit Prompt
-             </button>
-             <button className="bg-gray-900 hover:bg-black text-white px-4 py-2 rounded-full text-sm font-medium transition-transform transform active:scale-95 shadow-lg">
-               Sign In
-             </button>
+             {/* Auth and Submit buttons removed as requested */}
           </div>
         </div>
         

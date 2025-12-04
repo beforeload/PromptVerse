@@ -18,11 +18,11 @@ export interface PromptData {
   imageUrl: string; // Placeholder or generated result
   author: string;
   likes: number;
-  model: 'image' | 'text'; // Simplified model type for UI logic
+  model: 'image' | 'video'; // Updated: only image and video types
 }
 
 export interface GenerationResult {
   imageUrl?: string;
-  text?: string;
+  videoUrl?: string;
   error?: string;
 }

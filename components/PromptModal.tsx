@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { X, Copy, Zap, Check, Image as ImageIcon, Type as TypeIcon, Terminal, AlertCircle } from 'lucide-react';
+import { X, Copy, Zap, Check, Image as ImageIcon, Video as VideoIcon, Terminal, AlertCircle } from 'lucide-react';
 import { PromptData } from '../types';
-import { generateImage, generateText } from '../services/geminiService';
+import { generateImage, generateVideo } from '../services/geminiService';
 
 interface PromptModalProps {
   prompt: PromptData | null;
@@ -13,6 +13,9 @@ const PromptModal: React.FC<PromptModalProps> = ({ prompt, onClose }) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedContent, setGeneratedContent] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  
+  // Feature flag to temporarily hide the run button
+  const SHOW_RUN_BUTTON = false;
 
   // Reset state when prompt changes
   useEffect(() => {
@@ -39,7 +42,7 @@ const PromptModal: React.FC<PromptModalProps> = ({ prompt, onClose }) => {
       if (prompt.model === 'image') {
         result = await generateImage(prompt.content);
       } else {
-        result = await generateText(prompt.content);
+        result = await generateVideo(prompt.content);
       }
       setGeneratedContent(result);
     } catch (err) {
@@ -69,20 +72,27 @@ const PromptModal: React.FC<PromptModalProps> = ({ prompt, onClose }) => {
         {/* Left Side: Visuals */}
         <div className="w-full md:w-1/2 bg-gray-50 flex flex-col border-r border-gray-100 overflow-y-auto">
           <div className="p-6 flex-grow flex items-center justify-center bg-gray-100/50 relative min-h-[300px]">
-             {generatedContent && prompt.model === 'image' ? (
+             {generatedContent ? (
                 <div className="relative w-full h-full flex flex-col items-center gap-4 animate-in fade-in">
-                    <img 
-                      src={generatedContent} 
-                      alt="Generated Result" 
-                      className="w-full h-auto object-contain rounded-lg shadow-lg"
-                    />
+                    {prompt.model === 'image' ? (
+                       <img 
+                        src={generatedContent} 
+                        alt="Generated Result" 
+                        className="w-full h-auto object-contain rounded-lg shadow-lg"
+                      />
+                    ) : (
+                      <video 
+                        src={generatedContent} 
+                        controls
+                        autoPlay
+                        loop
+                        className="w-full h-auto object-contain rounded-lg shadow-lg bg-black"
+                      />
+                    )}
+                    
                     <span className="text-xs font-semibold text-green-600 bg-green-50 px-3 py-1 rounded-full border border-green-200">
-                       Generated with Gemini 3 Pro
+                       Generated with Gemini {prompt.model === 'image' ? '3 Pro' : 'Veo'}
                     </span>
-                </div>
-             ) : generatedContent && prompt.model === 'text' ? (
-                <div className="w-full bg-white p-6 rounded-xl shadow-sm border border-gray-200 font-mono text-sm whitespace-pre-wrap text-gray-700 overflow-auto max-h-[500px]">
-                   {generatedContent}
                 </div>
              ) : (
                 <img 
@@ -96,7 +106,7 @@ const PromptModal: React.FC<PromptModalProps> = ({ prompt, onClose }) => {
                <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm z-20">
                  <div className="w-12 h-12 border-4 border-brand-200 border-t-brand-600 rounded-full animate-spin mb-4"></div>
                  <p className="text-brand-800 font-medium animate-pulse">
-                   {prompt.model === 'image' ? 'Dreaming up pixels...' : 'Thinking...'}
+                   {prompt.model === 'image' ? 'Dreaming up pixels...' : 'Rendering video...'}
                  </p>
                </div>
              )}
@@ -120,10 +130,12 @@ const PromptModal: React.FC<PromptModalProps> = ({ prompt, onClose }) => {
                 <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wide border
                   ${prompt.model === 'image' ? 'bg-purple-50 text-purple-700 border-purple-100' : 'bg-blue-50 text-blue-700 border-blue-100'}
                 `}>
-                  {prompt.model === 'image' ? 'Image Gen' : 'Text Gen'}
+                  {prompt.model === 'image' ? 'Image Gen' : 'Video Gen'}
                 </span>
                 <span className="text-gray-400 text-sm">•</span>
                 <span className="text-gray-500 text-sm font-medium">{prompt.category}</span>
+                <span className="text-gray-400 text-sm">•</span>
+                <span className="text-gray-500 text-sm font-mono">#{prompt.id}</span>
               </div>
               <h2 className="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
                 {prompt.title}
@@ -181,31 +193,31 @@ const PromptModal: React.FC<PromptModalProps> = ({ prompt, onClose }) => {
             </div>
           </div>
 
-          {/* Footer Actions */}
-          <div className="p-6 md:p-8 pt-4 border-t border-gray-100 bg-white sticky bottom-0">
-             <button
-               onClick={handleGenerate}
-               disabled={isGenerating}
-               className={`
-                 w-full flex items-center justify-center gap-2 py-4 rounded-xl text-white font-bold text-lg shadow-lg shadow-brand-200 transition-all transform active:scale-[0.98]
-                 ${isGenerating ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-brand-600 to-indigo-600 hover:shadow-brand-300 hover:brightness-105'}
-               `}
-             >
-               {isGenerating ? (
-                 <>Generating...</>
-               ) : (
-                 <>
-                   <Zap size={20} className="fill-white" />
-                   {prompt.model === 'image' ? 'Generate Image with Gemini' : 'Run Prompt with Gemini'}
-                 </>
-               )}
-             </button>
-             {prompt.model === 'image' && (
+          {/* Footer Actions (Conditionally Hidden) */}
+          {SHOW_RUN_BUTTON && (
+            <div className="p-6 md:p-8 pt-4 border-t border-gray-100 bg-white sticky bottom-0">
+               <button
+                 onClick={handleGenerate}
+                 disabled={isGenerating}
+                 className={`
+                   w-full flex items-center justify-center gap-2 py-4 rounded-xl text-white font-bold text-lg shadow-lg shadow-brand-200 transition-all transform active:scale-[0.98]
+                   ${isGenerating ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-brand-600 to-indigo-600 hover:shadow-brand-300 hover:brightness-105'}
+                 `}
+               >
+                 {isGenerating ? (
+                   <>{prompt.model === 'video' ? 'Generating Video (Slow)...' : 'Generating...'}</>
+                 ) : (
+                   <>
+                     <Zap size={20} className="fill-white" />
+                     {prompt.model === 'image' ? 'Generate Image with Gemini' : 'Generate Video with Veo'}
+                   </>
+                 )}
+               </button>
                <p className="text-center text-xs text-gray-400 mt-3">
-                 Uses Gemini 3 Pro. Requires your own API Key via AI Studio.
+                  Requires your own API Key via AI Studio.
                </p>
-             )}
-          </div>
+            </div>
+          )}
 
         </div>
       </div>

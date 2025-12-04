@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, Copy, Image as ImageIcon, Type as TypeIcon } from 'lucide-react';
+import { Heart, Copy, Image as ImageIcon, Video as VideoIcon } from 'lucide-react';
 import { PromptData } from '../types';
 
 interface PromptCardProps {
@@ -32,16 +32,21 @@ const PromptCard: React.FC<PromptCardProps> = ({ prompt, onClick }) => {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         
-        {/* Type Badge */}
-        <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm p-1.5 rounded-full shadow-sm">
+        {/* Numeric ID Badge - Top Left */}
+        <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-lg shadow-sm border border-white/10">
+           <span className="text-white text-xs font-bold font-mono">#{prompt.id}</span>
+        </div>
+
+        {/* Type Badge - Bottom Right */}
+        <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm p-1.5 rounded-full shadow-sm">
           {prompt.model === 'image' ? (
             <ImageIcon size={14} className="text-purple-600" />
           ) : (
-            <TypeIcon size={14} className="text-blue-600" />
+            <VideoIcon size={14} className="text-blue-600" />
           )}
         </div>
 
-        {/* Floating Actions on Hover */}
+        {/* Floating Actions on Hover - Top Right */}
         <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
           <button 
             onClick={handleCopy}

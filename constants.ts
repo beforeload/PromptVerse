@@ -15,15 +15,15 @@ export const PROMPTS: PromptData[] = [
   },
   {
     id: '2',
-    title: 'React Component Generator',
-    description: 'Create a complex React component with Tailwind CSS.',
-    content: 'Write a React functional component using TypeScript and Tailwind CSS for a "Dashboard Card" that displays a line chart using recharts. It should have a title, a value, a percentage change indicator (green for up, red for down), and the chart at the bottom. The design should be modern and clean.',
+    title: 'React Component Tutorial',
+    description: 'A video tutorial showing how to create a complex React component.',
+    content: 'A cinematic coding tutorial video showing a developer typing a React functional component using TypeScript and Tailwind CSS for a "Dashboard Card". Close up shots of the screen, mechanical keyboard, soft studio lighting, tech atmosphere.',
     category: PromptCategory.CODING,
-    tags: ['react', 'typescript', 'tailwind', 'frontend'],
+    tags: ['react', 'typescript', 'tailwind', 'video'],
     imageUrl: 'https://picsum.photos/800/600?random=2',
     author: 'DevMaster',
     likes: 856,
-    model: 'text'
+    model: 'video'
   },
   {
     id: '3',
@@ -51,15 +51,15 @@ export const PROMPTS: PromptData[] = [
   },
   {
     id: '5',
-    title: 'SEO Blog Post Writer',
-    description: 'Generate an SEO-optimized blog post about sustainable living.',
-    content: 'Write a comprehensive, SEO-optimized blog post about "Top 10 Tips for Sustainable Living in 2024". Include a catchy title, an introduction hook, H2 and H3 headings, and a conclusion. Tone should be encouraging and practical.',
+    title: 'Sustainable Living Guide',
+    description: 'A video guide about sustainable living tips.',
+    content: 'A documentary style video about "Top 10 Tips for Sustainable Living in 2024". Shots of recycling, solar panels, organic gardening, happy people in nature. High quality, 4k, bright and uplifting style.',
     category: PromptCategory.WRITING,
-    tags: ['seo', 'blog', 'marketing'],
+    tags: ['sustainability', 'documentary', 'lifestyle'],
     imageUrl: 'https://picsum.photos/800/500?random=5',
     author: 'ContentKing',
     likes: 670,
-    model: 'text'
+    model: 'video'
   },
   {
     id: '6',
@@ -75,15 +75,15 @@ export const PROMPTS: PromptData[] = [
   },
   {
     id: '7',
-    title: 'Business Email Professional',
-    description: 'Rewrite a rough draft into a professional email.',
-    content: 'Rewrite the following email draft to be more professional, polite, and concise: "Hey boss, I can\'t come in tomorrow cause I\'m sick. Will finish the report later."',
+    title: 'Office Life Scene',
+    description: 'Professional business environment scene.',
+    content: 'A video clip of a busy modern open-plan office, diverse team collaborating at a whiteboard, glass walls, natural light, corporate atmosphere, slow motion, shallow depth of field.',
     category: PromptCategory.BUSINESS,
-    tags: ['email', 'professional', 'productivity'],
+    tags: ['business', 'office', 'collaboration'],
     imageUrl: 'https://picsum.photos/800/600?random=7',
     author: 'OfficeWizard',
     likes: 450,
-    model: 'text'
+    model: 'video'
   },
   {
     id: '8',
@@ -99,14 +99,14 @@ export const PROMPTS: PromptData[] = [
   },
   {
     id: '9',
-    title: 'Python Data Analysis Script',
-    description: 'Pandas script to analyze CSV data.',
-    content: 'Write a Python script using Pandas to read a CSV file named "sales_data.csv", clean the missing values in the "price" column by filling with the mean, group by "region", and calculate the total revenue. Output the result to a new CSV.',
+    title: 'Data Visualization',
+    description: 'Animated data visualization graphics.',
+    content: 'Futuristic 3D data visualization video, glowing charts and graphs, floating numbers, blue and cyan color scheme, technology background, smooth animation, 60fps.',
     category: PromptCategory.CODING,
-    tags: ['python', 'pandas', 'data science'],
+    tags: ['data', 'tech', 'animation', '3d'],
     imageUrl: 'https://picsum.photos/800/600?random=9',
     author: 'PyCoder',
     likes: 920,
-    model: 'text'
+    model: 'video'
   }
 ];
