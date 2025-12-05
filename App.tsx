@@ -1,10 +1,11 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Header from './components/Header';
 import CategoryFilter from './components/CategoryFilter'; // Used as Tag Filter
 import MasonryGrid from './components/MasonryGrid';
 import PromptModal from './components/PromptModal';
 import SubmitPromptModal from './components/SubmitPromptModal';
-import { PROMPTS, TRANSLATIONS } from './constants';
+import { TRANSLATIONS } from './constants';
+import { promptService } from './services/promptService';
 import { PromptData, User, Language } from './types';
 
 const App: React.FC = () => {
@@ -14,11 +15,28 @@ const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [language, setLanguage] = useState<Language>('zh'); // Default to Chinese
   
-  // State for prompts list (initialized with constants)
-  const [allPrompts, setAllPrompts] = useState<PromptData[]>(PROMPTS);
+  // State for prompts list
+  const [allPrompts, setAllPrompts] = useState<PromptData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
 
   const t = TRANSLATIONS[language];
+
+  // Fetch prompts on mount
+  useEffect(() => {
+    const fetchPrompts = async () => {
+      setIsLoading(true);
+      try {
+        const data = await promptService.getPrompts();
+        setAllPrompts(data);
+      } catch (error) {
+        console.error("Failed to load prompts:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchPrompts();
+  }, []);
 
   // Extract all unique tags
   const allTags = useMemo(() => {
@@ -48,7 +66,7 @@ const App: React.FC = () => {
   }, [selectedTag, searchQuery, allPrompts]);
 
   // Prevent background scrolling when modal is open
-  React.useEffect(() => {
+  useEffect(() => {
     if (selectedPrompt || isSubmitModalOpen) {
       document.body.style.overflow = 'hidden';
     } else {
@@ -56,22 +74,44 @@ const App: React.FC = () => {
     }
   }, [selectedPrompt, isSubmitModalOpen]);
 
-  const handleAddPrompt = (data: Partial<PromptData>) => {
-    const newId = (allPrompts.length + 1).toString();
-    const newPrompt: PromptData = {
-      id: newId,
-      title: data.title || 'Untitled',
-      description: data.description || '',
-      content: data.content || '',
-      tags: data.tags || [],
-      imageUrl: data.imageUrl || `https://picsum.photos/800/800?random=${Date.now()}`,
-      author: user?.name || 'Anonymous',
-      likes: 0,
-      model: 'image'
-    };
+  const handleAddPrompt = async (data: Partial<PromptData>) => {
+    if (!data.title || !data.content) return;
 
-    setAllPrompts([newPrompt, ...allPrompts]);
-    setIsSubmitModalOpen(false);
+    try {
+      const newPrompt = await promptService.createPrompt({
+        title: data.title,
+        description: data.description || '',
+        content: data.content,
+        tags: data.tags || [],
+        imageUrl: data.imageUrl || `https://picsum.photos/800/800?random=${Date.now()}`,
+        author: user?.name || 'Anonymous',
+        model: 'image'
+      });
+
+      setAllPrompts(prev => [newPrompt, ...prev]);
+      setIsSubmitModalOpen(false);
+    } catch (error) {
+      console.error("Failed to create prompt:", error);
+      alert("Failed to create prompt. Please try again.");
+    }
+  };
+
+  const handleLikePrompt = async (prompt: PromptData) => {
+    try {
+      // Optimistic update
+      setAllPrompts(prev => prev.map(p => 
+        p.id === prompt.id ? { ...p, likes: p.likes + 1 } : p
+      ));
+      
+      // API Call
+      await promptService.likePrompt(prompt.id);
+    } catch (error) {
+      console.error("Failed to like prompt:", error);
+      // Revert on failure
+      setAllPrompts(prev => prev.map(p => 
+        p.id === prompt.id ? { ...p, likes: p.likes - 1 } : p
+      ));
+    }
   };
 
   return (
@@ -110,11 +150,18 @@ const App: React.FC = () => {
         </div>
 
         {/* Gallery */}
-        <MasonryGrid 
-          prompts={filteredPrompts} 
-          onCardClick={setSelectedPrompt}
-          language={language}
-        />
+        {isLoading ? (
+          <div className="flex justify-center items-center py-20">
+             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-500"></div>
+          </div>
+        ) : (
+          <MasonryGrid 
+            prompts={filteredPrompts} 
+            onCardClick={setSelectedPrompt}
+            onLike={handleLikePrompt}
+            language={language}
+          />
+        )}
       </main>
 
       {/* Detail Modal */}

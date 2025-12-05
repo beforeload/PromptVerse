@@ -5,16 +5,26 @@ import { PromptData } from '../types';
 interface PromptCardProps {
   prompt: PromptData;
   onClick: (prompt: PromptData) => void;
+  onLike: (prompt: PromptData) => void;
 }
 
-const PromptCard: React.FC<PromptCardProps> = ({ prompt, onClick }) => {
+const PromptCard: React.FC<PromptCardProps> = ({ prompt, onClick, onLike }) => {
   const [copied, setCopied] = React.useState(false);
+  const [liked, setLiked] = React.useState(false);
 
   const handleCopy = (e: React.MouseEvent) => {
     e.stopPropagation();
     navigator.clipboard.writeText(prompt.content);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleLike = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!liked) {
+        setLiked(true);
+        onLike(prompt);
+    }
   };
 
   return (
@@ -74,10 +84,13 @@ const PromptCard: React.FC<PromptCardProps> = ({ prompt, onClick }) => {
              </div>
              <span className="text-xs text-gray-500 font-medium">{prompt.author}</span>
           </div>
-          <div className="flex items-center gap-1 text-gray-400 group-hover:text-pink-500 transition-colors">
-            <Heart size={14} className={prompt.likes > 1000 ? "fill-current" : ""} />
+          <button 
+            onClick={handleLike}
+            className={`flex items-center gap-1 transition-colors ${liked ? "text-pink-500" : "text-gray-400 group-hover:text-pink-500"}`}
+          >
+            <Heart size={14} className={liked || prompt.likes > 1000 ? "fill-current" : ""} />
             <span className="text-xs font-medium">{prompt.likes}</span>
-          </div>
+          </button>
         </div>
       </div>
     </div>

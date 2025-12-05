@@ -8,6 +8,9 @@ export interface PromptData {
   author: string;
   likes: number;
   model: 'image';
+  category?: string; // Optional to match API structure
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface GenerationResult {
