@@ -11,6 +11,8 @@ export interface PromptData {
   category?: string; // Optional to match API structure
   createdAt?: string;
   updatedAt?: string;
+  sourceHandle?: string; // e.g. @midjourney_prompts
+  sourceUrl?: string;    // e.g. https://instagram.com/p/xyz
 }
 
 export interface GenerationResult {

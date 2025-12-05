@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, Copy, Image as ImageIcon } from 'lucide-react';
+import { Heart, Copy, Image as ImageIcon, ExternalLink } from 'lucide-react';
 import { PromptData } from '../types';
 
 interface PromptCardProps {
@@ -76,11 +76,34 @@ const PromptCard: React.FC<PromptCardProps> = ({ prompt, onClick, onLike }) => {
           {prompt.description}
         </p>
 
-        {/* Footer - Like Button Only */}
-        <div className="flex items-center justify-end pt-3 border-t border-gray-50 mt-auto">
+        {/* Footer */}
+        <div className="flex items-center justify-between pt-3 border-t border-gray-50 mt-auto">
+          {/* Source Info */}
+          <div className="flex items-center min-w-0 mr-2">
+             {prompt.sourceHandle && (
+               prompt.sourceUrl ? (
+                 <a 
+                   href={prompt.sourceUrl}
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   onClick={(e) => e.stopPropagation()}
+                   className="text-xs text-gray-400 hover:text-brand-600 truncate flex items-center gap-1 transition-colors"
+                   title={`Source: ${prompt.sourceHandle}`}
+                 >
+                   <span className="truncate max-w-[120px]">{prompt.sourceHandle}</span>
+                   <ExternalLink size={10} className="flex-shrink-0" />
+                 </a>
+               ) : (
+                 <span className="text-xs text-gray-400 truncate block max-w-[120px]" title={prompt.sourceHandle}>
+                   {prompt.sourceHandle}
+                 </span>
+               )
+             )}
+          </div>
+
           <button 
             onClick={handleLike}
-            className={`flex items-center gap-1 transition-colors ${liked ? "text-pink-500" : "text-gray-400 group-hover:text-pink-500"}`}
+            className={`flex-shrink-0 flex items-center gap-1 transition-colors ${liked ? "text-pink-500" : "text-gray-400 group-hover:text-pink-500"}`}
           >
             <Heart size={14} className={liked || prompt.likes > 1000 ? "fill-current" : ""} />
             <span className="text-xs font-medium">{prompt.likes}</span>

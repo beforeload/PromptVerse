@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Copy, Zap, Check, Terminal, AlertCircle } from 'lucide-react';
+import { X, Copy, Zap, Check, Terminal, AlertCircle, ExternalLink } from 'lucide-react';
 import { PromptData, Language } from '../types';
 import { generateImage } from '../services/geminiService';
 import { TRANSLATIONS } from '../constants';
@@ -111,12 +111,34 @@ const PromptModal: React.FC<PromptModalProps> = ({ prompt, onClose, language }) 
           {/* Header */}
           <div className="p-6 md:p-8 pb-4 border-b border-gray-100 flex justify-between items-start">
             <div>
-              <div className="flex items-center gap-2 mb-2">
+              <div className="flex items-center flex-wrap gap-x-2 gap-y-1 mb-2">
                 <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wide border bg-purple-50 text-purple-700 border-purple-100">
                   {t.imageGen}
                 </span>
                 <span className="text-gray-400 text-sm">•</span>
                 <span className="text-gray-500 text-sm font-mono">#{prompt.id}</span>
+                
+                {/* Source Display */}
+                {(prompt.sourceHandle || prompt.sourceUrl) && (
+                  <>
+                     <span className="text-gray-400 text-sm">•</span>
+                     {prompt.sourceUrl ? (
+                        <a 
+                          href={prompt.sourceUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="flex items-center gap-1 text-sm text-brand-600 hover:text-brand-700 hover:underline transition-colors"
+                        >
+                          {prompt.sourceHandle || t.source}
+                          <ExternalLink size={12} />
+                        </a>
+                     ) : (
+                        <span className="text-gray-500 text-sm text-brand-600">
+                          {prompt.sourceHandle}
+                        </span>
+                     )}
+                  </>
+                )}
               </div>
               <h2 className="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
                 {prompt.title}

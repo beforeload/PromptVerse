@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { X, Send, Sparkles, Upload, Image as ImageIcon } from 'lucide-react';
+import { X, Send, Sparkles, Upload, Image as ImageIcon, Link as LinkIcon } from 'lucide-react';
 import { PromptData, Language } from '../types';
 import { TRANSLATIONS } from '../constants';
 
@@ -18,7 +18,9 @@ const SubmitPromptModal: React.FC<SubmitPromptModalProps> = ({ onClose, onSubmit
     description: '',
     content: '',
     tags: '',
-    imageUrl: ''
+    imageUrl: '',
+    sourceHandle: '',
+    sourceUrl: ''
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -57,7 +59,9 @@ const SubmitPromptModal: React.FC<SubmitPromptModalProps> = ({ onClose, onSubmit
       description: formData.description,
       content: formData.content,
       tags: tagsArray.length > 0 ? tagsArray : ['community'],
-      imageUrl: formData.imageUrl || undefined
+      imageUrl: formData.imageUrl || undefined,
+      sourceHandle: formData.sourceHandle,
+      sourceUrl: formData.sourceUrl
     });
   };
 
@@ -149,6 +153,44 @@ const SubmitPromptModal: React.FC<SubmitPromptModalProps> = ({ onClose, onSubmit
                 placeholder="..."
               />
               {errors.description && <p className="text-xs text-red-500">{errors.description}</p>}
+            </div>
+
+            {/* Source Info (New) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+               <div className="space-y-2">
+                 <label className="text-sm font-semibold text-gray-700 flex justify-between">
+                   {t.sourceHandle} <span className="text-gray-400 font-normal text-xs">{t.optional}</span>
+                 </label>
+                 <div className="relative">
+                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                     <span className="text-gray-400 text-sm">@</span>
+                   </div>
+                   <input
+                     type="text"
+                     value={formData.sourceHandle}
+                     onChange={(e) => setFormData({...formData, sourceHandle: e.target.value})}
+                     className="w-full pl-8 pr-4 py-2 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none transition-all"
+                     placeholder="username"
+                   />
+                 </div>
+               </div>
+               <div className="space-y-2">
+                 <label className="text-sm font-semibold text-gray-700 flex justify-between">
+                   {t.sourceUrl} <span className="text-gray-400 font-normal text-xs">{t.optional}</span>
+                 </label>
+                 <div className="relative">
+                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                     <LinkIcon size={14} className="text-gray-400" />
+                   </div>
+                   <input
+                     type="text"
+                     value={formData.sourceUrl}
+                     onChange={(e) => setFormData({...formData, sourceUrl: e.target.value})}
+                     className="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none transition-all"
+                     placeholder="https://..."
+                   />
+                 </div>
+               </div>
             </div>
 
             {/* Prompt Content */}

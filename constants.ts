@@ -21,7 +21,11 @@ export const TRANSLATIONS = {
     title: "Title",
     shortDesc: "Short Description",
     submit: "Submit Prompt",
-    required: "Required"
+    required: "Required",
+    source: "Source",
+    sourceHandle: "Source Handle (@xxx)",
+    sourceUrl: "Source Link",
+    optional: "Optional"
   },
   zh: {
     searchPlaceholder: "搜索提示词 (例如 '赛博朋克', 'Logo')...",
@@ -43,7 +47,11 @@ export const TRANSLATIONS = {
     title: "标题",
     shortDesc: "简短描述",
     submit: "提交提示词",
-    required: "必填"
+    required: "必填",
+    source: "来源",
+    sourceHandle: "来源账号 (@xxx)",
+    sourceUrl: "来源链接",
+    optional: "可选"
   }
 };
 
@@ -57,7 +65,9 @@ export const PROMPTS: PromptData[] = [
     imageUrl: 'https://picsum.photos/800/600?random=1',
     author: 'NeoArtist',
     likes: 1240,
-    model: 'image'
+    model: 'image',
+    sourceHandle: '@neon_dreams',
+    sourceUrl: 'https://twitter.com/'
   },
   {
     id: '3',
@@ -68,7 +78,9 @@ export const PROMPTS: PromptData[] = [
     imageUrl: 'https://picsum.photos/800/800?random=3',
     author: 'DesignPro',
     likes: 2300,
-    model: 'image'
+    model: 'image',
+    sourceHandle: '@logomaster',
+    sourceUrl: 'https://dribbble.com/'
   },
   {
     id: '4',
@@ -90,7 +102,9 @@ export const PROMPTS: PromptData[] = [
     imageUrl: 'https://picsum.photos/800/800?random=6',
     author: 'RenderGod',
     likes: 3400,
-    model: 'image'
+    model: 'image',
+    sourceHandle: '@3d_daily',
+    sourceUrl: 'https://instagram.com/'
   },
   {
     id: '8',
