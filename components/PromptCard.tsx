@@ -32,8 +32,8 @@ const PromptCard: React.FC<PromptCardProps> = ({ prompt, onClick, onLike }) => {
       className="group relative bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 cursor-pointer flex flex-col h-full"
       onClick={() => onClick(prompt)}
     >
-      {/* Image Container */}
-      <div className="relative aspect-square sm:aspect-[4/3] overflow-hidden bg-gray-100">
+      {/* Image Container - Fixed to 1:1 Aspect Ratio */}
+      <div className="relative aspect-square overflow-hidden bg-gray-100">
         <img 
           src={prompt.imageUrl} 
           alt={prompt.title} 
@@ -76,14 +76,8 @@ const PromptCard: React.FC<PromptCardProps> = ({ prompt, onClick, onLike }) => {
           {prompt.description}
         </p>
 
-        {/* Footer */}
-        <div className="flex items-center justify-between pt-3 border-t border-gray-50 mt-auto">
-          <div className="flex items-center gap-2">
-             <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-brand-400 to-purple-500 flex items-center justify-center text-[10px] text-white font-bold">
-               {prompt.author.substring(0, 2).toUpperCase()}
-             </div>
-             <span className="text-xs text-gray-500 font-medium">{prompt.author}</span>
-          </div>
+        {/* Footer - Like Button Only */}
+        <div className="flex items-center justify-end pt-3 border-t border-gray-50 mt-auto">
           <button 
             onClick={handleLike}
             className={`flex items-center gap-1 transition-colors ${liked ? "text-pink-500" : "text-gray-400 group-hover:text-pink-500"}`}
