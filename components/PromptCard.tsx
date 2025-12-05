@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, Copy, Image as ImageIcon, Video as VideoIcon } from 'lucide-react';
+import { Heart, Copy, Image as ImageIcon } from 'lucide-react';
 import { PromptData } from '../types';
 
 interface PromptCardProps {
@@ -39,11 +39,7 @@ const PromptCard: React.FC<PromptCardProps> = ({ prompt, onClick }) => {
 
         {/* Type Badge - Bottom Right */}
         <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm p-1.5 rounded-full shadow-sm">
-          {prompt.model === 'image' ? (
-            <ImageIcon size={14} className="text-purple-600" />
-          ) : (
-            <VideoIcon size={14} className="text-blue-600" />
-          )}
+          <ImageIcon size={14} className="text-purple-600" />
         </div>
 
         {/* Floating Actions on Hover - Top Right */}

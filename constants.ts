@@ -1,4 +1,51 @@
-import { PromptCategory, PromptData } from './types';
+import { PromptData, Language } from './types';
+
+export const TRANSLATIONS = {
+  en: {
+    searchPlaceholder: "Search prompts (e.g., 'cyberpunk', 'logo')...",
+    submitPrompt: "Submit Prompt",
+    signIn: "Sign in with Google",
+    all: "All",
+    noPrompts: "No prompts found matching your criteria.",
+    reset: "Reset Filters",
+    copy: "Copy Prompt",
+    copied: "Copied",
+    runGemini: "Run Prompt with Gemini",
+    imageGen: "Image Gen",
+    desc: "Description",
+    tags: "Tags",
+    prompt: "Prompt",
+    generating: "Generating...",
+    uploadImage: "Upload Example Image",
+    uploadHelp: "Click or drag image to upload",
+    title: "Title",
+    shortDesc: "Short Description",
+    submit: "Submit Prompt",
+    required: "Required"
+  },
+  zh: {
+    searchPlaceholder: "搜索提示词 (例如 '赛博朋克', 'Logo')...",
+    submitPrompt: "提交提示词",
+    signIn: "使用 Google 登录",
+    all: "全部",
+    noPrompts: "没有找到匹配的提示词。",
+    reset: "重置筛选",
+    copy: "复制提示词",
+    copied: "已复制",
+    runGemini: "使用 Gemini 运行",
+    imageGen: "图像生成",
+    desc: "描述",
+    tags: "标签",
+    prompt: "提示词内容",
+    generating: "生成中...",
+    uploadImage: "上传示例图片",
+    uploadHelp: "点击或拖拽上传图片",
+    title: "标题",
+    shortDesc: "简短描述",
+    submit: "提交提示词",
+    required: "必填"
+  }
+};
 
 export const PROMPTS: PromptData[] = [
   {
@@ -6,7 +53,6 @@ export const PROMPTS: PromptData[] = [
     title: 'Neon Cyberpunk Street',
     description: 'A futuristic city street at night with heavy rain and neon lights.',
     content: 'Cinematic shot of a cyberpunk city street at rainy night, neon signs reflecting in puddles, towering skyscrapers, flying cars, volumetric fog, highly detailed, photorealistic, 8k resolution, blade runner style.',
-    category: PromptCategory.PHOTOGRAPHY,
     tags: ['cyberpunk', 'city', 'neon', 'sci-fi'],
     imageUrl: 'https://picsum.photos/800/600?random=1',
     author: 'NeoArtist',
@@ -14,23 +60,10 @@ export const PROMPTS: PromptData[] = [
     model: 'image'
   },
   {
-    id: '2',
-    title: 'React Component Tutorial',
-    description: 'A video tutorial showing how to create a complex React component.',
-    content: 'A cinematic coding tutorial video showing a developer typing a React functional component using TypeScript and Tailwind CSS for a "Dashboard Card". Close up shots of the screen, mechanical keyboard, soft studio lighting, tech atmosphere.',
-    category: PromptCategory.CODING,
-    tags: ['react', 'typescript', 'tailwind', 'video'],
-    imageUrl: 'https://picsum.photos/800/600?random=2',
-    author: 'DevMaster',
-    likes: 856,
-    model: 'video'
-  },
-  {
     id: '3',
     title: 'Minimalist Logo Design',
     description: 'Prompt for generating a clean, vector-style logo.',
     content: 'A minimalist vector logo design for a coffee shop named "Bean & Leaf", combining a coffee bean and a leaf shape, line art style, black on white background, sophisticated, modern typography.',
-    category: PromptCategory.DIGITAL_ART,
     tags: ['logo', 'minimalist', 'vector', 'branding'],
     imageUrl: 'https://picsum.photos/800/800?random=3',
     author: 'DesignPro',
@@ -42,7 +75,6 @@ export const PROMPTS: PromptData[] = [
     title: 'Fantasy Landscape',
     description: 'Epic fantasy world with floating islands.',
     content: 'A breathtaking fantasy landscape featuring floating islands with waterfalls cascading into the clouds below, ancient ruins, dragon flying in distance, golden hour lighting, matte painting style, artstation HQ.',
-    category: PromptCategory.DIGITAL_ART,
     tags: ['fantasy', 'landscape', 'concept art'],
     imageUrl: 'https://picsum.photos/800/1200?random=4',
     author: 'SkyWalker',
@@ -50,23 +82,10 @@ export const PROMPTS: PromptData[] = [
     model: 'image'
   },
   {
-    id: '5',
-    title: 'Sustainable Living Guide',
-    description: 'A video guide about sustainable living tips.',
-    content: 'A documentary style video about "Top 10 Tips for Sustainable Living in 2024". Shots of recycling, solar panels, organic gardening, happy people in nature. High quality, 4k, bright and uplifting style.',
-    category: PromptCategory.WRITING,
-    tags: ['sustainability', 'documentary', 'lifestyle'],
-    imageUrl: 'https://picsum.photos/800/500?random=5',
-    author: 'ContentKing',
-    likes: 670,
-    model: 'video'
-  },
-  {
     id: '6',
     title: 'Isometric 3D Room',
     description: 'A cozy gaming setup in isometric 3D style.',
     content: 'Isometric 3D render of a cozy gamer bedroom, purple and blue led lighting, multiple monitors, mechanical keyboard, bean bag chair, posters on wall, clay render style, soft lighting, 4k, blender 3d.',
-    category: PromptCategory.THREE_D_DESIGN,
     tags: ['3d', 'isometric', 'interior', 'gaming'],
     imageUrl: 'https://picsum.photos/800/800?random=6',
     author: 'RenderGod',
@@ -74,23 +93,10 @@ export const PROMPTS: PromptData[] = [
     model: 'image'
   },
   {
-    id: '7',
-    title: 'Office Life Scene',
-    description: 'Professional business environment scene.',
-    content: 'A video clip of a busy modern open-plan office, diverse team collaborating at a whiteboard, glass walls, natural light, corporate atmosphere, slow motion, shallow depth of field.',
-    category: PromptCategory.BUSINESS,
-    tags: ['business', 'office', 'collaboration'],
-    imageUrl: 'https://picsum.photos/800/600?random=7',
-    author: 'OfficeWizard',
-    likes: 450,
-    model: 'video'
-  },
-  {
     id: '8',
     title: 'Portrait of an Elder',
     description: 'Highly detailed portrait photography.',
     content: 'Portrait photography of an elderly fisherman with a weathered face, intense eyes, wearing a yellow raincoat, rainy weather, natural lighting, shot on 85mm lens, f/1.8, bokeh background, national geographic style.',
-    category: PromptCategory.PHOTOGRAPHY,
     tags: ['portrait', 'photography', 'realistic'],
     imageUrl: 'https://picsum.photos/600/800?random=8',
     author: 'PhotoGenic',
@@ -98,15 +104,25 @@ export const PROMPTS: PromptData[] = [
     model: 'image'
   },
   {
-    id: '9',
-    title: 'Data Visualization',
-    description: 'Animated data visualization graphics.',
-    content: 'Futuristic 3D data visualization video, glowing charts and graphs, floating numbers, blue and cyan color scheme, technology background, smooth animation, 60fps.',
-    category: PromptCategory.CODING,
-    tags: ['data', 'tech', 'animation', '3d'],
-    imageUrl: 'https://picsum.photos/800/600?random=9',
-    author: 'PyCoder',
-    likes: 920,
-    model: 'video'
+    id: '10',
+    title: 'Ancient Chinese Temple',
+    description: 'Atmospheric shot of an ancient temple in the mountains.',
+    content: 'Photorealistic image of an ancient Chinese temple nestled in misty mountains at sunrise, traditional architecture, red lanterns, cherry blossoms falling, mystical atmosphere, 8k, unreal engine 5.',
+    tags: ['china', 'architecture', 'landscape', 'culture'],
+    imageUrl: 'https://picsum.photos/800/600?random=10',
+    author: 'ChenArt',
+    likes: 1890,
+    model: 'image'
+  },
+  {
+    id: '11',
+    title: 'Cute 3D Character',
+    description: 'Pixar style 3D character design.',
+    content: 'Adorable 3D character render of a small robot gardener holding a flower, Pixar style, big expressive eyes, soft textures, sunny garden background, bokeh, bright colors, 4k.',
+    tags: ['character', '3d', 'cute', 'robot'],
+    imageUrl: 'https://picsum.photos/800/800?random=11',
+    author: 'ToonMaster',
+    likes: 2100,
+    model: 'image'
   }
 ];

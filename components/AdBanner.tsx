@@ -1,11 +1,5 @@
 import React, { useEffect } from 'react';
 
-declare global {
-  interface Window {
-    adsbygoogle: any[];
-  }
-}
-
 const AdBanner: React.FC = () => {
   useEffect(() => {
     try {

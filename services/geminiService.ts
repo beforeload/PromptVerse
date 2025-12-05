@@ -1,29 +1,20 @@
 import { GoogleGenAI } from "@google/genai";
 
-// Declaration for the custom window property used for key selection
-declare global {
-  interface AIStudio {
-    hasSelectedApiKey: () => Promise<boolean>;
-    openSelectKey: () => Promise<void>;
-  }
-}
-
-const checkApiKey = async () => {
+export const generateImage = async (prompt: string): Promise<string> => {
+  // 1. Check/Request API Key selection for High-Quality Image/Veo models
   if (window.aistudio) {
     const hasKey = await window.aistudio.hasSelectedApiKey();
     if (!hasKey) {
        await window.aistudio.openSelectKey();
+       // Assuming success after returning, per instructions to not wait/race
     }
   }
-};
 
-export const generateImage = async (prompt: string): Promise<string> => {
-  await checkApiKey();
+  const generate = async () => {
+    // 2. Initialize Client
+    // Create a new GoogleGenAI instance right before making an API call to ensure it always uses the most up-to-date API key.
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
-  // Using gemini-3-pro-image-preview as requested for high quality
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
-  try {
     const response = await ai.models.generateContent({
       model: 'gemini-3-pro-image-preview',
       contents: {
@@ -37,61 +28,34 @@ export const generateImage = async (prompt: string): Promise<string> => {
       },
     });
 
-    for (const part of response.candidates?.[0]?.content?.parts || []) {
-      if (part.inlineData) {
-        const base64EncodeString: string = part.inlineData.data;
-        return `data:image/png;base64,${base64EncodeString}`;
+    // 3. Extract Image
+    if (response.candidates && response.candidates.length > 0) {
+      for (const part of response.candidates[0].content.parts) {
+        if (part.inlineData) {
+          const base64EncodeString = part.inlineData.data;
+          return `data:image/png;base64,${base64EncodeString}`;
+        }
       }
     }
-    throw new Error("No image data found in response.");
-  } catch (error) {
-    console.error("Gemini Image Generation Error:", error);
-    if (error instanceof Error && error.message.includes("Requested entity was not found")) {
-        if (window.aistudio) await window.aistudio.openSelectKey();
-        throw new Error("API Key validation failed. Please select a key again.");
-    }
-    throw error;
-  }
-};
+    
+    throw new Error("No image generated.");
+  };
 
-export const generateVideo = async (prompt: string): Promise<string> => {
-  await checkApiKey();
-
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-  
   try {
-    let operation = await ai.models.generateVideos({
-      model: 'veo-3.1-fast-generate-preview',
-      prompt: prompt,
-      config: {
-        numberOfVideos: 1,
-        resolution: '720p',
-        aspectRatio: '16:9'
+    return await generate();
+  } catch (error: any) {
+    console.error("Gemini API Error:", error);
+    
+    // Handle "Requested entity was not found" error by prompting for key selection again
+    if (error.message && error.message.includes("Requested entity was not found")) {
+      if (window.aistudio) {
+         console.log("Re-requesting API Key selection due to entity not found error.");
+         await window.aistudio.openSelectKey();
+         // Retry the generation once
+         return await generate();
       }
-    });
-
-    // Poll for completion
-    while (!operation.done) {
-      await new Promise(resolve => setTimeout(resolve, 5000));
-      operation = await ai.operations.getVideosOperation({operation: operation});
     }
 
-    const downloadLink = operation.response?.generatedVideos?.[0]?.video?.uri;
-    if (!downloadLink) throw new Error("No video URI in response");
-
-    // Fetch the actual video bytes using the API key
-    const response = await fetch(`${downloadLink}&key=${process.env.API_KEY}`);
-    if (!response.ok) throw new Error("Failed to download video content");
-
-    const blob = await response.blob();
-    return URL.createObjectURL(blob);
-
-  } catch (error) {
-    console.error("Gemini Video Generation Error:", error);
-     if (error instanceof Error && error.message.includes("Requested entity was not found")) {
-        if (window.aistudio) await window.aistudio.openSelectKey();
-        throw new Error("API Key validation failed. Please select a key again.");
-    }
-    throw new Error("Failed to generate video response.");
+    throw error;
   }
 };

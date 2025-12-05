@@ -1,28 +1,46 @@
-export enum PromptCategory {
-  ALL = 'All',
-  PHOTOGRAPHY = 'Photography',
-  DIGITAL_ART = 'Digital Art',
-  CODING = 'Coding',
-  WRITING = 'Writing',
-  BUSINESS = 'Business',
-  THREE_D_DESIGN = '3D Design'
-}
-
 export interface PromptData {
   id: string;
   title: string;
   description: string;
   content: string; // The actual prompt
-  category: PromptCategory;
   tags: string[];
   imageUrl: string; // Placeholder or generated result
   author: string;
   likes: number;
-  model: 'image' | 'video'; // Updated: only image and video types
+  model: 'image';
 }
 
 export interface GenerationResult {
   imageUrl?: string;
-  videoUrl?: string;
+  text?: string;
   error?: string;
+}
+
+export interface User {
+  name: string;
+  email: string;
+  picture: string;
+}
+
+export type Language = 'en' | 'zh';
+
+declare global {
+  interface AIStudio {
+    hasSelectedApiKey: () => Promise<boolean>;
+    openSelectKey: () => Promise<void>;
+  }
+
+  interface Window {
+    google?: {
+      accounts: {
+        id: {
+          initialize: (config: any) => void;
+          renderButton: (parent: HTMLElement, options: any) => void;
+          prompt: () => void;
+        };
+      };
+    };
+    aistudio?: AIStudio;
+    adsbygoogle?: any[];
+  }
 }

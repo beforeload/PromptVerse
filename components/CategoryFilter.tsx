@@ -1,31 +1,51 @@
 import React from 'react';
-import { PromptCategory } from '../types';
+import { Language } from '../types';
+import { TRANSLATIONS } from '../constants';
 
-interface CategoryFilterProps {
-  selectedCategory: PromptCategory;
-  onSelectCategory: (category: PromptCategory) => void;
+interface TagFilterProps {
+  tags: string[];
+  selectedTag: string | null;
+  onSelectTag: (tag: string | null) => void;
+  language: Language;
 }
 
-const CategoryFilter: React.FC<CategoryFilterProps> = ({ selectedCategory, onSelectCategory }) => {
+const CategoryFilter: React.FC<TagFilterProps> = ({ tags, selectedTag, onSelectTag, language }) => {
+  const t = TRANSLATIONS[language];
+
   return (
-    <div className="w-full border-b border-gray-100 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div className="flex space-x-2 overflow-x-auto no-scrollbar pb-1">
-          {Object.values(PromptCategory).map((category) => {
-             const isSelected = selectedCategory === category;
+    <div className="w-full bg-white pb-6 pt-2 border-b border-gray-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-wrap justify-start gap-2">
+          {/* All Button */}
+          <button
+            onClick={() => onSelectTag(null)}
+            className={`
+              whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-200
+              ${selectedTag === null 
+                ? 'bg-black text-white shadow-sm' 
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }
+            `}
+          >
+            {t.all}
+          </button>
+
+          {/* Dynamic Tags */}
+          {tags.map((tag) => {
+             const isSelected = selectedTag === tag;
              return (
               <button
-                key={category}
-                onClick={() => onSelectCategory(category)}
+                key={tag}
+                onClick={() => onSelectTag(tag)}
                 className={`
-                  whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-all duration-200
+                  whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-200 capitalize
                   ${isSelected 
-                    ? 'bg-brand-600 text-white shadow-md transform scale-105' 
-                    : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 hover:border-gray-300'
+                    ? 'bg-black text-white shadow-sm' 
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }
                 `}
               >
-                {category}
+                #{tag}
               </button>
              );
           })}
